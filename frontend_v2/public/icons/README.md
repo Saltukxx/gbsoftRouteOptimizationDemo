@@ -1,27 +1,13 @@
-# Vehicle Icons
+# Vehicle Icon Atlas
 
-This directory contains sprite atlases for vehicle visualization in the demo.
+This directory contains icon atlases for different vehicle types used in the simulation.
 
-## Required Icons
+## Icon Variants
 
-The application expects a `vehicle-atlas.png` file containing:
-- Truck icons for vehicles
-- Depot icons for distribution centers  
-- Delivery point icons
+- `fleet-vehicles.png` - Primary vehicle icons with different statuses
+- `delivery-vehicles.png` - Delivery truck variations for order fulfillment
+- `scooter-fleet.png` - Smaller vehicles for urban routes
 
-## Creating Icon Atlas
+## Usage
 
-You can create the atlas manually or use the following placeholder structure:
-
-```
-vehicle-atlas.png (384x128 pixels)
-├── truck    (0,   0, 128, 128) - Vehicle icon
-├── depot    (128, 0, 128, 128) - Depot icon  
-└── delivery (256, 0, 128, 128) - Delivery point icon
-```
-
-For the demo, simple colored circles or basic truck/building icons work well.
-
-## Fallback
-
-If icons are not provided, the application will use Deck.gl's default markers with different colors.
+Icon atlases are processed by the Deck.gl `IconLayer` to render thousands of vehicles efficiently. Each atlas includes metadata for sprite positioning and scaling.
