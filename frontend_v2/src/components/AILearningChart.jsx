@@ -231,4 +231,26 @@ const AILearningChart = ({ accuracyHistory = [85], currentAccuracy = 85 }) => {
           <div className="text-lg font-bold text-purple-600">
             {((currentAccuracy - 85) / (98.5 - 85) * 100).toFixed(0)}%
           </div>
-          <div the rest }
+          <div className="text-xs text-gray-500">Progress</div>
+        </div>
+      </div>
+
+      {/* Learning Insights */}
+      <div className="mt-4 bg-blue-50 rounded-lg p-3">
+        <div className="text-sm">
+          <div className="font-medium text-blue-800 mb-1">🧠 AI Insights</div>
+          <div className="text-blue-700">
+            {currentAccuracy < 90 
+              ? "Model is rapidly learning route patterns and fuel efficiency factors."
+              : currentAccuracy < 95
+              ? "Advanced optimization techniques being applied to fine-tune predictions."
+              : "Model achieving near-optimal performance with minimal improvement potential."
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AILearningChart;
