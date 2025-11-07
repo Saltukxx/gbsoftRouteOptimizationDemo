@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend_v2
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./demo.db
+      - OSRM_URL=https://router.project-osrm.org
+      - FRONTEND_URL=http://localhost:5173
+    networks:
+      - app-network
+    volumes:
+      - backend-data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  frontend:
+    build: ./frontend_v2
+    ports:
+      - "5173:5173"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - app-network
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+      - VITE_WS_URL=ws://localhost:8000/ws/live
+
+  # Optional: Local OSRM instance for better performance
+  # Uncomment if you want to run OSRM locally instead of using public service
+  # osrm:
+  #   image: osrm/osrm-backend:latest
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - osrm-data:/data
+  #   command: >
+  #     sh -c "
+  #       echo 'OSRM service would require OSM data download and processing.';
+  #       echo 'For demo purposes, using public OSRM service at router.project-osrm.org';
+  #       echo 'See README for instructions on setting up local OSRM data.';
+  #       sleep infinity;
+  #     "
+  #   networks:
+  #     - app-network
+
+volumes:
+  backend-data:
+  # osrm-data:
+
+networks:
+  app-network:
+    driver: bridge
