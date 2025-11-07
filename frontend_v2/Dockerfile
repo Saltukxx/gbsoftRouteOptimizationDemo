@@ -1,25 +1,19 @@
-FROM node:18-alpine
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+COPY package.json package-lock.json* .npmrc* ./
+RUN npm install --legacy-peer-deps
 
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy application code
 COPY . .
 
-# Build the application
 RUN npm run build
 
-# Expose port
-EXPOSE 5173
+FROM nginx:alpine
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:5173/ || exit 1
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Run the application
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"]
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
